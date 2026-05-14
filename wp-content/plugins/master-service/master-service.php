@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Plugin Name: Mastter Service
- * Plugin URI:  #
+ * Plugin Name: Master Service
+ * Plugin URI:  https://github.com/dharminderdeveloper
  * Description: Master Service Log form handling — file uploads, email via wp_mail, and daily JSON logging.
- * Version:     1.0
+ * Version:     1.1
  * Author:      Dharminder Singh
- * Author URI:  #
- * Text Domain: mastter-service
+ * Author URI:  https://github.com/dharminderdeveloper
+ * Text Domain: master-service
  */
 
 if (! defined('ABSPATH')) {
@@ -21,7 +21,7 @@ define('MSTTR_LOGS_DIR', MSTTR_PLUGIN_DIR . 'logs/');
 require_once MSTTR_PLUGIN_DIR . 'includes/logger.php';
 require_once MSTTR_PLUGIN_DIR . 'includes/form-handler.php';
 
-class Mastter_Service_Plugin_Main
+class Master_Service_Plugin_Main
 {
 
     public function __construct()
@@ -31,8 +31,8 @@ class Mastter_Service_Plugin_Main
         add_shortcode('mastter_service_form', [$this, 'render_form_shortcode']);
 
         // hook form handler defined in includes/form-handler.php
-        add_action('admin_post_nopriv_mastter_service_submit', 'msttr_handle_form_submission');
-        add_action('admin_post_mastter_service_submit', 'msttr_handle_form_submission');
+        add_action('admin_post_nopriv_master_service_submit', 'msttr_handle_form_submission');
+        add_action('admin_post_master_service_submit', 'msttr_handle_form_submission');
     }
 
     public function on_activation()
@@ -51,7 +51,7 @@ class Mastter_Service_Plugin_Main
     {
         // CSS
         wp_enqueue_style(
-            'mastter-frontend-css',
+            'master-frontend-css',
             MSTTR_PLUGIN_URL . 'assets/css/master-service.css',
             [],
             '1.0.0'
@@ -59,7 +59,7 @@ class Mastter_Service_Plugin_Main
 
         // JS
         wp_enqueue_script(
-            'mastter-frontend-js',
+            'master-frontend-js',
             MSTTR_PLUGIN_URL . 'assets/js/master-service.js',
             ['jquery'],
             '1.0.0',
@@ -68,11 +68,11 @@ class Mastter_Service_Plugin_Main
 
         // Provide post_url and nonce to JS
         wp_localize_script(
-            'mastter-frontend-js',
-            'mastterServiceConf',
+            'master-frontend-js',
+            'masterServiceConf',
             [
                 'post_url' => admin_url('admin-post.php'),
-                'nonce'    => wp_create_nonce('mastter_service_nonce'),
+                'nonce'    => wp_create_nonce('master_service_nonce'),
             ]
         );
     }
@@ -303,4 +303,4 @@ class Mastter_Service_Plugin_Main
     }
 }
 
-new Mastter_Service_Plugin_Main();
+new Master_Service_Plugin_Main();

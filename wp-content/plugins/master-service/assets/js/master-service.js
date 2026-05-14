@@ -245,12 +245,12 @@ ctaButtons.forEach(function(btn) {
         const formData = new FormData(form);
 
         // Ensure action and nonce are present
-        if (typeof mastterServiceConf !== 'undefined') {
-            formData.append('action', 'mastter_service_submit');
-            formData.append('_mastter_service_nonce', mastterServiceConf.nonce);
+        if (typeof masterServiceConf !== 'undefined') {
+            formData.append('action', 'master_service_submit');
+            formData.append('_master_service_nonce', masterServiceConf.nonce);
         } else {
             // fallback
-            formData.append('action', 'mastter_service_submit');
+            formData.append('action', 'master_service_submit');
         }
 
         // Remove any existing file inputs from FormData and add our managed files
@@ -276,7 +276,7 @@ ctaButtons.forEach(function(btn) {
         showLoader();
 
         // Use post_url passed from PHP
-        var postUrl = (typeof mastterServiceConf !== 'undefined' && mastterServiceConf.post_url) ? mastterServiceConf.post_url : '/wp-admin/admin-post.php';
+        var postUrl = (typeof masterServiceConf !== 'undefined' && masterServiceConf.post_url) ? masterServiceConf.post_url : '/wp-admin/admin-post.php';
 
         fetch(postUrl, {
             method: "POST",

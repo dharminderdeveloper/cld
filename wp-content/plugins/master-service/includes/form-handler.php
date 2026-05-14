@@ -4,7 +4,7 @@ if (! defined('ABSPATH')) {
 }
 
 /**
- * Handle form submission (hooked to admin_post[_nopriv]_mastter_service_submit)
+ * Handle form submission (hooked to admin_post[_nopriv]_master_service_submit)
  * Uses wp_mail, wp_handle_upload, and msttr_append_log.
  */
 function msttr_handle_form_submission()
@@ -16,8 +16,8 @@ function msttr_handle_form_submission()
     }
 
     // Nonce check
-    $nonce = isset($_POST['_mastter_service_nonce']) ? sanitize_text_field(wp_unslash($_POST['_mastter_service_nonce'])) : '';
-    if (! wp_verify_nonce($nonce, 'mastter_service_nonce')) {
+    $nonce = isset($_POST['_master_service_nonce']) ? sanitize_text_field(wp_unslash($_POST['_master_service_nonce'])) : '';
+    if (! wp_verify_nonce($nonce, 'master_service_nonce')) {
         wp_send_json_error(['message' => 'Security check failed (invalid nonce).']);
         wp_die();
     }
@@ -197,7 +197,7 @@ function msttr_handle_form_submission()
     $message .= '<p><strong>Final Terms Agreed:</strong> ' . esc_html($final_terms) . '</p>';
 
     $headers = [
-        'From: Mastter Service <info@calgarylegaldocs.ca>',
+        'From: Master Service <info@calgarylegaldocs.ca>',
         'Reply-To: ' . $email,
         'Content-Type: text/html; charset=UTF-8',
     ];
