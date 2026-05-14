@@ -1,0 +1,327 @@
+.ms-btn {
+    padding: 10px 35px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+.ms-btn-primary {
+    background: var(--gold);
+    color: var(--navy);
+}
+
+.ms-btn-primary:hover {
+    background: var(--light-gold);
+    transform: translateY(-2px);
+}
+
+.ms-btn-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.ms-btn-secondary:hover {
+    background: white;
+    color: var(--navy);
+}
+
+.bg-blue {
+    background: linear-gradient(135deg, var(--navy) 0%, #2c5282 100%);
+    border-color: linear-gradient(135deg, var(--navy) 0%, #2c5282 100%);
+}
+.contactModal h3{
+	font-size:20px
+}
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1002;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 650px;
+    position: relative;
+}
+
+.close-ms-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--navy);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-ms-btn:hover {
+    color: var(--gold);
+}
+
+/* Form input styles for modal */
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    font-family: inherit;
+}
+
+.modal-content textarea {
+    min-height: 80px;
+}
+
+.form-column {
+    display: flex;
+    flex-direction: column;
+    /* gap: 2rem; */
+}
+
+.form-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.form-section h3 {
+    color: var(--navy);
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--navy);
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="date"],
+.form-group input[type="time"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: inherit;
+}
+
+.form-group textarea {
+    height: 80px;
+    resize: vertical;
+}
+
+.d-inline {
+    display: inline;
+}
+
+.d-grid {
+    display: grid;
+}
+
+.grid-col-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.msg {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    display: block;
+}
+
+.error-msg,
+.file-upload-error-msg {
+    color: rgb(114, 28, 36);
+    background-color: rgb(248, 215, 218);
+    border: 1px solid rgb(245, 198, 203);
+}
+
+.success-msg {
+    color: rgb(23, 87, 36);
+    background-color: rgb(212, 237, 218);
+    border: 1px solid rgb(191, 223, 198);
+}
+
+.mb-1 {
+    margin-bottom: 0.75rem;
+}
+
+.ms-btn-sm {
+    font-size: 12px;
+    padding: 6px 15px;
+}
+
+.text-error {
+    color: red;
+}   
+
+.ajax-loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Spinner container */
+.ajax-loader {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #1a365d;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Spinning animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #masterServiceForm {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+        padding: 1.5rem;
+    }
+
+    /* Improve form fields for mobile */
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+        /* Prevents zooming on focus in iOS */
+    }
+
+    .contact-info {
+        padding: 1rem;
+    }
+
+    .form-section,
+    .modal-content {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-text {
+        font-size: 1.3rem;
+    }
+
+    .container {
+        padding: 0px 20px;
+    }
+
+    .grid-col-2 {
+        grid-template-columns: unset;
+    }
+}
+
+/* === RESTORE ORIGINAL MASTTER MODAL COLORS & HEADINGS === */
+:root {
+    --navy: #1a365d;
+    --gold: #d4af37;
+    --light-gold: #f7e98e;
+    --cream: #fafafa;
+    --dark-text: #2d3748;
+    --light-text: #718096;
+}
+
+/* Modal main color fix */
+#contactModal, #contactModal .modal-content {
+    color: var(--dark-text);   
+	backdrop-filter: blur(6px);
+}
+
+/* Headings */
+#contactModal .form-section h3,
+#contactModal .heading-hr {
+    color: var(--navy);
+    border-bottom: 2px solid var(--gold);
+}
+
+/* Labels */
+#contactModal .form-group label {
+    color: var(--navy);
+    font-weight: 500;
+}
+
+/* Buttons */
+#contactModal .ms-btn-primary {
+    background: var(--gold);
+    color: var(--navy);
+	border: 1px solid #fff;
+}
+
+#contactModal .ms-btn-primary:hover {
+    
+    background: #fff;
+    border: 1px solid;
+
+}
+
+/* Placeholder color */
+#contactModal input::placeholder,
+#contactModal textarea::placeholder {
+    color: rgba(26, 54, 93, 0.5);
+}
+
+/* Input color */
+#contactModal input,
+#contactModal textarea,
+#contactModal select {
+    color: var(--navy);
+    background: #fff;
+    border: 1px solid #ccc;
+}
+
+/* Close button */
+#contactModal .close-ms-btn {
+    color: var(--navy);
+}
+#contactModal .close-ms-btn:hover {
+    color: var(--gold);
+}
