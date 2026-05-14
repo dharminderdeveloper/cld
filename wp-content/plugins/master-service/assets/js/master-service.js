@@ -1,11 +1,9 @@
 // Form submission handler and file manager (original logic, adapted to WP endpoint)
 var fileManager;
 
-
 // Modal functions
 function showModal() {
     var el = document.getElementById('contactModal');
-	console.log('modal');
     if (el) {
         el.style.display = 'block';
         document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
@@ -22,6 +20,7 @@ function closeModal() {
 
 // File upload management
 class FileUploadManager {
+    
     constructor() {
         this.selectedFiles = [];
         this.maxFiles = 6;
@@ -200,31 +199,35 @@ function hideLoader(loaderId = 'ajaxLoader') {
     }
 }
 
+function isValidEmailAddress(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function setFieldError(field) {
+    if (field) {
+        field.classList.add('master-field-error');
+    }
+}
+
+function clearFieldError(field) {
+    if (field) {
+        field.classList.remove('master-field-error');
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-	 
-	
-	var ctaButtons = document.querySelectorAll(".home-cta-1 a, .btn-yellow");
 
-ctaButtons.forEach(function(btn) {
-    btn.addEventListener("click", function(e) {
-        console.log("CTA clicked");
-		e.preventDefault(); // prevent default if you want custom behavior
-		console.log("Start Your Service Now button clicked!");
-		 showModal(); // or any function you want to trigger
+    var ctaButtons = document.querySelectorAll(".home-cta-1 a, .btn-yellow");
+
+    ctaButtons.forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+            console.log("CTA clicked");
+            e.preventDefault(); // prevent default if you want custom behavior
+            console.log("Start Your Service Now button clicked!");
+            showModal(); // or any function you want to trigger
+        });
     });
-});
 
-
-	// Add click listener (example)
-// 	if (ctaButton) {
-// 	  ctaButton.addEventListener("click", function (e) {
-// 		e.preventDefault(); // prevent default if you want custom behavior
-// 		console.log("Start Your Service Now button clicked!");
-// 		 showModal(); // or any function you want to trigger
-		
-// 	  });
-// 	}	
-	
     // Initialize file manager here when DOM is ready
     fileManager = new FileUploadManager();
     fileManager.init();
@@ -233,6 +236,15 @@ ctaButtons.forEach(function(btn) {
     var theForm = document.getElementById("masterServiceForm");
     if (!theForm) return;
 
+    theForm.querySelectorAll('input, select, textarea').forEach(function (field) {
+        field.addEventListener('input', function () {
+            clearFieldError(field);
+        });
+        field.addEventListener('change', function () {
+            clearFieldError(field);
+        });
+    });
+
     theForm.addEventListener("submit", function (e) {
         e.preventDefault();
 
@@ -240,6 +252,69 @@ ctaButtons.forEach(function(btn) {
         const submitButton = form.querySelector('button[type="submit"]');
         const successMsg = document.querySelector(".success-msg");
         const errorMsg = document.querySelector(".error-msg");
+
+        // Hide both messages initially
+        if (successMsg) successMsg.style.display = "none";
+        if (errorMsg) errorMsg.style.display = "none";
+
+        const clientName = form.querySelector('[name="client_name"]');
+        const email = form.querySelector('[name="email"]');
+        const termsAcknowledged = form.querySelector('[name="terms_acknowledged"]');
+        const finalTerms = form.querySelector('[name="final_terms"]');
+        const clientNameValue = clientName ? clientName.value.trim() : '';
+        const emailValue = email ? email.value.trim() : '';
+
+        [clientName, email, termsAcknowledged, finalTerms].forEach(clearFieldError);
+
+        if (!clientNameValue) {
+            if (errorMsg) {
+                errorMsg.textContent = "Please enter your name.";
+                errorMsg.style.display = "block";
+            }
+            setFieldError(clientName);
+            if (clientName) clientName.focus();
+            return;
+        }
+
+        if (!emailValue) {
+            if (errorMsg) {
+                errorMsg.textContent = "Please enter your email address.";
+                errorMsg.style.display = "block";
+            }
+            setFieldError(email);
+            if (email) email.focus();
+            return;
+        }
+
+        if (!isValidEmailAddress(emailValue)) {
+            if (errorMsg) {
+                errorMsg.textContent = "Please enter a valid email address.";
+                errorMsg.style.display = "block";
+            }
+            setFieldError(email);
+            if (email) email.focus();
+            return;
+        }
+
+        if (!termsAcknowledged || !termsAcknowledged.checked) {
+            if (errorMsg) {
+                errorMsg.textContent = "Please acknowledge the regular service priority provisions.";
+                errorMsg.style.display = "block";
+            }
+            setFieldError(termsAcknowledged);
+            if (termsAcknowledged) termsAcknowledged.focus();
+            return;
+        }
+
+        if (!finalTerms || !finalTerms.checked) {
+            if (errorMsg) {
+                errorMsg.textContent = "Please agree with the terms and conditions.";
+                errorMsg.style.display = "block";
+            }
+            setFieldError(finalTerms);
+            if (finalTerms) finalTerms.focus();
+            return;
+        }
 
         // Create FormData and add all form fields
         const formData = new FormData(form);
@@ -262,15 +337,10 @@ ctaButtons.forEach(function(btn) {
             formData.append("document_upload[]", file);
         });
 
-        // Hide both messages initially
-        if (successMsg) successMsg.style.display = "none";
-        if (errorMsg) errorMsg.style.display = "none";
-
         // Show loading state
         if (submitButton) {
             submitButton.disabled = true;
-            submitButton.innerHTML =
-                '<span style="display: inline-block; width: 20px; height: 20px; border: 2px solid #ffffff; border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite; margin-right: 10px;"></span>Processing your request…';
+            submitButton.innerHTML = '<span style="display: inline-block; width: 20px; height: 20px; border: 2px solid #ffffff; border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite; margin-right: 10px;"></span>Processing your request…';
         }
 
         showLoader();

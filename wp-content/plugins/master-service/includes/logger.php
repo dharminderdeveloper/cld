@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param array $entry Associative array that will be appended.
  * @return bool True on success, false on failure.
  */
-function msttr_append_log( $entry ) {
-    $logs_dir = MSTTR_LOGS_DIR;
+function master_append_log( $entry ) {
+    $logs_dir = MASTER_LOGS_DIR;
     if ( ! file_exists( $logs_dir ) ) {
         wp_mkdir_p( $logs_dir );
     }

@@ -5,9 +5,9 @@ if (! defined('ABSPATH')) {
 
 /**
  * Handle form submission (hooked to admin_post[_nopriv]_master_service_submit)
- * Uses wp_mail, wp_handle_upload, and msttr_append_log.
+ * Uses wp_mail, wp_handle_upload, and master_append_log.
  */
-function msttr_handle_form_submission()
+function master_handle_form_submission()
 {
     // Only accept POST
     if (strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST') {
@@ -22,34 +22,24 @@ function msttr_handle_form_submission()
         wp_die();
     }
 
-    // Required fields
-    $required = ['client_name', 'email', 'phone', 'reference_no', 'billing_address', 'service_deadline', 'service_priority', 'document_delivery_method', 'document_name', 'affidavit_success_action', 'affidavit_unsuccessful_action'];
-    foreach ($required as $field) {
-        if (empty($_POST[$field])) {
-            wp_send_json_error(['message' => 'Please fill in all required fields.']);
-            wp_die();
-        }
-    }
-
     // Sanitize inputs
-    $client_name = sanitize_text_field(wp_unslash($_POST['client_name']));
+    $client_name = isset($_POST['client_name']) ? sanitize_text_field(wp_unslash($_POST['client_name'])) : '';
     $company_name = isset($_POST['company_name']) ? sanitize_text_field(wp_unslash($_POST['company_name'])) : '';
-    $reference_no = sanitize_text_field(wp_unslash($_POST['reference_no']));
-    $phone = sanitize_text_field(wp_unslash($_POST['phone']));
-    $email = sanitize_email(wp_unslash($_POST['email']));
-    $billing_address = sanitize_textarea_field(wp_unslash($_POST['billing_address']));
-    $service_deadline = sanitize_text_field(wp_unslash($_POST['service_deadline']));
+    $reference_no = isset($_POST['reference_no']) ? sanitize_text_field(wp_unslash($_POST['reference_no'])) : '';
+    $phone = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
+    $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
+    $billing_address = isset($_POST['billing_address']) ? sanitize_textarea_field(wp_unslash($_POST['billing_address'])) : '';
+    $service_deadline = isset($_POST['service_deadline']) ? sanitize_text_field(wp_unslash($_POST['service_deadline'])) : '';
     $service_time = isset($_POST['service_time']) ? sanitize_text_field(wp_unslash($_POST['service_time'])) : '';
-    $service_priority = sanitize_text_field(wp_unslash($_POST['service_priority']));
-    $document_delivery_method = sanitize_text_field(wp_unslash($_POST['document_delivery_method']));
-    $document_name = sanitize_text_field(wp_unslash($_POST['document_name']));
+    $service_priority = isset($_POST['service_priority']) ? sanitize_text_field(wp_unslash($_POST['service_priority'])) : '';
+    $document_delivery_method = isset($_POST['document_delivery_method']) ? sanitize_text_field(wp_unslash($_POST['document_delivery_method'])) : '';
+    $document_name = isset($_POST['document_name']) ? sanitize_text_field(wp_unslash($_POST['document_name'])) : '';
     $document_filed_date = isset($_POST['document_filed_date']) ? sanitize_text_field(wp_unslash($_POST['document_filed_date'])) : '';
-    $affidavit_success_action = sanitize_text_field(wp_unslash($_POST['affidavit_success_action']));
-    $affidavit_unsuccessful_action = sanitize_text_field(wp_unslash($_POST['affidavit_unsuccessful_action']));
+    $affidavit_success_action = isset($_POST['affidavit_success_action']) ? sanitize_text_field(wp_unslash($_POST['affidavit_success_action'])) : '';
+    $affidavit_unsuccessful_action = isset($_POST['affidavit_unsuccessful_action']) ? sanitize_text_field(wp_unslash($_POST['affidavit_unsuccessful_action'])) : '';
     $mail_affidavit = isset($_POST['mail_affidavit']) ? 'Yes' : 'No';
     $terms_acknowledged = isset($_POST['terms_acknowledged']) ? 'Yes' : 'No';
     $final_terms = isset($_POST['final_terms']) ? 'Yes' : 'No';
-
     $recipient_name = isset($_POST['recipient_name']) ? sanitize_text_field(wp_unslash($_POST['recipient_name'])) : '';
     $recipient_phone = isset($_POST['recipient_phone']) ? sanitize_text_field(wp_unslash($_POST['recipient_phone'])) : '';
     $recipient_email = isset($_POST['recipient_email']) ? sanitize_email(wp_unslash($_POST['recipient_email'])) : '';
@@ -57,9 +47,29 @@ function msttr_handle_form_submission()
     $recipient_postal = isset($_POST['recipient_postal']) ? sanitize_text_field(wp_unslash($_POST['recipient_postal'])) : '';
     $recipient_address = isset($_POST['recipient_address']) ? sanitize_textarea_field(wp_unslash($_POST['recipient_address'])) : '';
 
+    if ($client_name === '') {
+        wp_send_json_error(['message' => 'Please enter your name.']);
+        wp_die();
+    }
+
+    if ($email === '') {
+        wp_send_json_error(['message' => 'Please enter your email address.']);
+        wp_die();
+    }
+
     // Validate user's email
     if (! is_email($email)) {
         wp_send_json_error(['message' => 'Please enter a valid email address.']);
+        wp_die();
+    }
+
+    if (! isset($_POST['terms_acknowledged'])) {
+        wp_send_json_error(['message' => 'Please acknowledge the regular service priority provisions.']);
+        wp_die();
+    }
+
+    if (! isset($_POST['final_terms'])) {
+        wp_send_json_error(['message' => 'Please agree with the terms and conditions.']);
         wp_die();
     }
 
@@ -244,8 +254,8 @@ function msttr_handle_form_submission()
     ];
 
     // Append log (silently ignore if not writeable)
-    if (function_exists('msttr_append_log')) {
-        msttr_append_log($log_entry);
+    if (function_exists('master_append_log')) {
+        master_append_log($log_entry);
     }
 
     if (wp_doing_ajax()) {
@@ -253,7 +263,7 @@ function msttr_handle_form_submission()
         if ($mail_result) {
             wp_send_json_success(['message' => 'Form submitted successfully. We will contact you shortly.']);
         } else {
-            wp_send_json_error(['message' => 'Failed to send request. Please try again later.']);
+            wp_send_json_error(['message' => 'Failed to send the email request. Please try again later.']);
         }
     } else {
         // If request is from fetch() expecting JSON (we used fetch in JS), return JSON and exit.
